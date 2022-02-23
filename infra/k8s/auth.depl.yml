@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: dakarakoso/auth
+          image: us.gcr.io/learngenering-dev/auth
 
 ---
 apiVersion: v1
