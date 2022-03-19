@@ -16,7 +16,14 @@ spec:
               service:
                 name: auth-srv
                 port:
-                  number: 3001
+                  number: 3000
+          - path: /api/courses/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: courses-srv
+                port:
+                  number: 3000
           - path: /?(.*)
             pathType: Prefix
             backend:
