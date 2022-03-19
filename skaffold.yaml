@@ -5,12 +5,12 @@ deploy:
     manifests:
       - ./infra/k8s/*
 build:
-  # local:
-  #   push: false
-  googleCloudBuild:
-    projectId: learngenering-dev
+  local:
+    push: false
+  # googleCloudBuild:
+  #   projectId: learngenering-dev
   artifacts:
-    - image: us.gcr.io/learngenering-dev/auth
+    - image: dakarakoso/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -18,11 +18,19 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/learngenering-dev/client
+    - image: dakarakoso/client
       context: client
       docker:
         dockerfile: Dockerfile
       sync:
         manual:
           - src: "**/*.js"
+            dest: .
+    - image: dakarakoso/courses
+      context: courses
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
             dest: .

@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: courses-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: courses
   template:
     metadata:
       labels:
-        app: auth
+        app: courses
     spec:
       containers:
-        - name: auth
-          image: dakarakoso/auth
+        - name: courses
+          image: dakarakoso/courses
           env:
             - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017/auth"
+              value: "mongodb://courses-mongo-srv:27017/courses"
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
@@ -28,12 +28,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: courses-srv
 spec:
   selector:
-    app: auth
+    app: courses
   ports:
-    - name: auth
+    - name: courses
       protocol: TCP
       port: 3000
       targetPort: 3000
