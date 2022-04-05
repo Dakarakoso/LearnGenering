@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../../app";
 import { Course } from "../../models/course";
+import { natsWrapper } from "../../nats-wrapper";
 
 it("has a route handler listening to /api/courses for post requests", async () => {
   const response = await request(app).post("/api/courses").send({});
@@ -78,4 +79,18 @@ it("creates a course with valid inputs", async () => {
   expect(courses.length).toEqual(1);
   expect(courses[0].price).toEqual(20);
   expect(courses[0].title).toEqual(title);
+});
+
+it("publishes an event", async () => {
+  const title = "asldkfj";
+
+  await request(app)
+    .post("/api/courses")
+    .set("Cookie", global.signin())
+    .send({
+      title,
+      price: 20,
+    })
+    .expect(201);
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

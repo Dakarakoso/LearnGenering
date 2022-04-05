@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@learngenering/common": "^1.0.5",
     "@types/node": "^17.0.21",
     "node-nats-streaming": "^0.3.2",
     "ts-node-dev": "^1.1.8"

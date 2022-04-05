@@ -7,6 +7,8 @@ import {
   NotAuthorizedError,
 } from "@learngenering/common";
 import { Course } from "../models/course";
+import { CourseUpdatedPublisher } from "../events/publishers/course-updated";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -33,6 +35,13 @@ router.put(
     course.set({
       title: req.body.title,
       price: req.body.price,
+    });
+
+    new CourseUpdatedPublisher(natsWrapper.client).publish({
+      id: course.id,
+      title: course.title,
+      price: course.price,
+      userId: course.userId,
     });
 
     await course.save();

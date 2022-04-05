@@ -16,6 +16,14 @@ spec:
         - name: courses
           image: dakarakoso/courses
           env:
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: learngenering
             - name: MONGO_URI
               value: "mongodb://courses-mongo-srv:27017/courses"
             - name: JWT_KEY

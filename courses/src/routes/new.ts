@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import { body } from "express-validator";
 import { requireAuth, validateRequest } from "@learngenering/common";
 import { Course } from "../models/course";
+import { CourseCreatedPublisher } from "../events/publishers/course-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -18,14 +20,20 @@ router.post(
   async (req: Request, res: Response) => {
     const { title, price } = req.body;
 
-    const ticket = Course.build({
+    const course = Course.build({
       title,
       price,
       userId: req.currentUser!.id,
     });
-    await ticket.save();
+    await course.save();
+    await new CourseCreatedPublisher(natsWrapper.client).publish({
+      id: course.id,
+      title: course.title,
+      price: course.price,
+      userId: course.userId,
+    });
 
-    res.status(201).send(ticket);
+    res.status(201).send(course);
   }
 );
 

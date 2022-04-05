@@ -1,8 +1,5 @@
-import { Listener } from "./base-listener";
+import { Subjects, Listener, CourseCreatedEvent } from "@learngenering/common";
 import { Message } from "node-nats-streaming";
-import { CourseCreatedEvent } from "./course-created-event";
-import { Subjects } from "./subjects";
-
 export class CourseCreatedListener extends Listener<CourseCreatedEvent> {
   readonly subject = Subjects.CourseCreated;
   queueGroupName = "payments-service";
