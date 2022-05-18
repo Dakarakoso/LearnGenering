@@ -28,6 +28,7 @@ router.post(
     await course.save();
     await new CourseCreatedPublisher(natsWrapper.client).publish({
       id: course.id,
+      version: course.version,
       title: course.title,
       price: course.price,
       userId: course.userId,

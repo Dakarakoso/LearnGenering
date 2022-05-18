@@ -39,6 +39,7 @@ router.put(
 
     new CourseUpdatedPublisher(natsWrapper.client).publish({
       id: course.id,
+      version: course.version,
       title: course.title,
       price: course.price,
       userId: course.userId,

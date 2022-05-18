@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface CourseAttrs {
   title: string;
@@ -10,6 +11,7 @@ interface CourseDoc extends mongoose.Document {
   title: string;
   price: number;
   userId: string;
+  version: number;
 }
 
 interface CourseModel extends mongoose.Model<CourseDoc> {
@@ -40,6 +42,8 @@ const courseSchema = new mongoose.Schema(
     },
   }
 );
+courseSchema.set("versionKey", "version");
+courseSchema.plugin(updateIfCurrentPlugin);
 
 courseSchema.statics.build = (attrs: CourseAttrs) => {
   return new Course(attrs);
