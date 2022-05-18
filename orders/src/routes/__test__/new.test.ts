@@ -19,6 +19,7 @@ it("returns an error if the course is already reserved", async () => {
   const course = Course.build({
     title: "test",
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   await course.save();
   const order = Order.build({
@@ -40,6 +41,7 @@ it("reserves a course", async () => {
   const course = Course.build({
     title: "test",
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   await course.save();
 
@@ -54,6 +56,7 @@ it("emits an order created event", async () => {
   const course = Course.build({
     title: "test",
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   await course.save();
 

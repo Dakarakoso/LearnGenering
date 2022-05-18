@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
 import { Course } from "../../models/course";
@@ -9,6 +10,7 @@ it("marks an order as cancelled", async () => {
   const course = Course.build({
     title: "test",
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   await course.save();
   const user = global.signin();
@@ -36,6 +38,7 @@ it("emits an order cancelled event", async () => {
   const course = Course.build({
     title: "test",
     price: 20,
+    id: new mongoose.Types.ObjectId().toHexString(),
   });
   await course.save();
   const user = global.signin();
