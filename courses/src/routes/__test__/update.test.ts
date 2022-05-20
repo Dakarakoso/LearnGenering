@@ -1,6 +1,7 @@
 import request from "supertest";
 import { app } from "../../app";
 import mongoose from "mongoose";
+import { Course } from "../../models/course";
 import { natsWrapper } from "../../nats-wrapper";
 
 it("returns 404 if the provided does not exist", async () => {
@@ -96,4 +97,23 @@ it("publishes an event", async () => {
     .expect(200);
 
   expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
+
+it("rejects updates if the course is reserved", async () => {
+  const cookie = global.signin();
+
+  const response = await request(app)
+    .post("/api/courses")
+    .set("Cookie", cookie)
+    .send({ title: "test", price: 20 });
+
+  const course = await Course.findById(response.body.id);
+  course!.set({ orderId: new mongoose.Types.ObjectId().toHexString() });
+  await course!.save();
+
+  await request(app)
+    .put(`/api/courses/${response.body.id}`)
+    .set("Cookie", cookie)
+    .send({ title: "Hello", price: 100 })
+    .expect(400);
 });

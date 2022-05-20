@@ -5,6 +5,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from "@learngenering/common";
 import { Course } from "../models/course";
 import { CourseUpdatedPublisher } from "../events/publishers/course-updated";
@@ -26,6 +27,10 @@ router.put(
     const course = await Course.findById(req.params.id);
     if (!course) {
       throw new NotFoundError();
+    }
+
+    if (course.orderId) {
+      throw new BadRequestError("Cannot edit a reserved course");
     }
 
     if (course.userId !== req.currentUser!.id) {
