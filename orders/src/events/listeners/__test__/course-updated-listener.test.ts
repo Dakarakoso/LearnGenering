@@ -1,44 +1,46 @@
 import mongoose from "mongoose";
 import { Message } from "node-nats-streaming";
-import { Course } from "../../../models/course";
-import { natsWrapper } from "../../../nats-wrapper";
-import { CourseUpdatedListener } from "../course-updated-listener";
 import { CourseUpdatedEvent } from "@learngenering/common";
+import { CourseUpdatedListener } from "../course-updated-listener";
+import { natsWrapper } from "../../../nats-wrapper";
+import { Course } from "../../../models/course";
 
 const setup = async () => {
-  // create a listener
+  // Create a listener
   const listener = new CourseUpdatedListener(natsWrapper.client);
 
-  // create and save a course
+  // Create and save a course
   const course = Course.build({
     id: new mongoose.Types.ObjectId().toHexString(),
-    title: "TEST",
+    title: "concert",
     price: 20,
   });
   await course.save();
 
-  // create a fake data obj
+  // Create a fake data object
   const data: CourseUpdatedEvent["data"] = {
     id: course.id,
     version: course.version + 1,
-    title: "TEST 2",
-    price: 10000,
-    userId: "dkfjnskdjfn",
+    title: "new concert",
+    price: 999,
+    userId: "ablskdjf",
   };
 
-  //create a fake msg obj
-  //@ts-ignore
+  // Create a fake msg object
+  // @ts-ignore
   const msg: Message = {
     ack: jest.fn(),
   };
 
-  //return all
-  return { course, data, msg, listener };
+  // return all of this stuff
+  return { msg, data, course, listener };
 };
 
-it("finds, updates and saves a course", async () => {
-  const { course, data, msg, listener } = await setup();
+it("finds, updates, and saves a course", async () => {
+  const { msg, data, course, listener } = await setup();
+
   await listener.onMessage(data, msg);
+
   const updatedCourse = await Course.findById(course.id);
 
   expect(updatedCourse!.title).toEqual(data.title);
@@ -47,14 +49,18 @@ it("finds, updates and saves a course", async () => {
 });
 
 it("acks the message", async () => {
-  const { data, msg, listener } = await setup();
+  const { msg, data, listener } = await setup();
+
   await listener.onMessage(data, msg);
+
   expect(msg.ack).toHaveBeenCalled();
 });
 
 it("does not call ack if the event has a skipped version number", async () => {
-  const { data, msg, listener } = await setup();
+  const { msg, data, listener, course } = await setup();
+
   data.version = 10;
+
   try {
     await listener.onMessage(data, msg);
   } catch (err) {}

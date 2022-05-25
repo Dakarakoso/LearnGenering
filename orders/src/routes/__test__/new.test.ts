@@ -1,11 +1,11 @@
+import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
-import mongoose from "mongoose";
 import { Order, OrderStatus } from "../../models/order";
 import { Course } from "../../models/course";
 import { natsWrapper } from "../../nats-wrapper";
 
-it("returns an error if the course does not exist", async () => {
+it("returns an error if the Course does not exist", async () => {
   const courseId = new mongoose.Types.ObjectId();
 
   await request(app)
@@ -15,17 +15,17 @@ it("returns an error if the course does not exist", async () => {
     .expect(404);
 });
 
-it("returns an error if the course is already reserved", async () => {
+it("returns an error if the Course is already reserved", async () => {
   const course = Course.build({
-    title: "test",
-    price: 20,
     id: new mongoose.Types.ObjectId().toHexString(),
+    title: "concert",
+    price: 20,
   });
   await course.save();
   const order = Order.build({
-    userId: "1234",
-    status: OrderStatus.Created,
     course,
+    userId: "laskdflkajsdf",
+    status: OrderStatus.Created,
     expiresAt: new Date(),
   });
   await order.save();
@@ -37,11 +37,11 @@ it("returns an error if the course is already reserved", async () => {
     .expect(400);
 });
 
-it("reserves a course", async () => {
+it("reserves a Course", async () => {
   const course = Course.build({
-    title: "test",
-    price: 20,
     id: new mongoose.Types.ObjectId().toHexString(),
+    title: "concert",
+    price: 20,
   });
   await course.save();
 
@@ -54,9 +54,9 @@ it("reserves a course", async () => {
 
 it("emits an order created event", async () => {
   const course = Course.build({
-    title: "test",
-    price: 20,
     id: new mongoose.Types.ObjectId().toHexString(),
+    title: "concert",
+    price: 20,
   });
   await course.save();
 

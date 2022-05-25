@@ -9,7 +9,7 @@ const setup = async () => {
   // Create an instance of the listener
   const listener = new OrderCreatedListener(natsWrapper.client);
 
-  // Create and save a ticket
+  // Create and save a course
   const course = Course.build({
     title: "concert",
     price: 99,

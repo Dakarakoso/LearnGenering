@@ -18,7 +18,7 @@ it("implements optimistic concurrency control", async () => {
   secondInstance!.set({ price: 15 });
   //save the first fetched course
   await firstInstance!.save();
-  // save the second fetched ticket and expect an error
+  // save the second fetched course and expect an error
   try {
     await secondInstance!.save();
   } catch (err) {

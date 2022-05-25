@@ -1,24 +1,25 @@
+import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
 import { Course } from "../../models/course";
-import mongoose from "mongoose";
 
 it("fetches the order", async () => {
-  //create a course
+  // Create a course
   const course = Course.build({
-    title: "test",
-    price: 20,
     id: new mongoose.Types.ObjectId().toHexString(),
+    title: "concert",
+    price: 20,
   });
   await course.save();
 
   const user = global.signin();
-  //make a request to build an order with this course
+  // make a request to build an order with this course
   const { body: order } = await request(app)
     .post("/api/orders")
     .set("Cookie", user)
     .send({ courseId: course.id })
     .expect(201);
+
   // make request to fetch the order
   const { body: fetchedOrder } = await request(app)
     .get(`/api/orders/${order.id}`)
@@ -30,21 +31,22 @@ it("fetches the order", async () => {
 });
 
 it("returns an error if one user tries to fetch another users order", async () => {
-  //create a course
+  // Create a course
   const course = Course.build({
-    title: "test",
-    price: 20,
     id: new mongoose.Types.ObjectId().toHexString(),
+    title: "concert",
+    price: 20,
   });
   await course.save();
 
   const user = global.signin();
-  //make a request to build an order with this course
+  // make a request to build an order with this course
   const { body: order } = await request(app)
     .post("/api/orders")
     .set("Cookie", user)
     .send({ courseId: course.id })
     .expect(201);
+
   // make request to fetch the order
   await request(app)
     .get(`/api/orders/${order.id}`)

@@ -38,8 +38,8 @@ it("updates the course, publishes an event, and acks the message", async () => {
 
   await listener.onMessage(data, msg);
 
-  const updatedTicket = await Course.findById(course.id);
-  expect(updatedTicket!.orderId).not.toBeDefined();
+  const updatedCourse = await Course.findById(course.id);
+  expect(updatedCourse!.orderId).not.toBeDefined();
   expect(msg.ack).toHaveBeenCalled();
   expect(natsWrapper.client.publish).toHaveBeenCalled();
 });

@@ -1,31 +1,30 @@
+import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
 import { Order } from "../../models/order";
 import { Course } from "../../models/course";
-import mongoose from "mongoose";
 
-const buildCourse = async () => {
+const buildcourse = async () => {
   const course = Course.build({
-    title: "test",
-    price: 20,
     id: new mongoose.Types.ObjectId().toHexString(),
+    title: "concert",
+    price: 20,
   });
-
   await course.save();
+
   return course;
 };
 
 it("fetches orders for an particular user", async () => {
   // Create three courses
-  const courseOne = await buildCourse();
-  const courseTwo = await buildCourse();
-  const courseThree = await buildCourse();
+  const courseOne = await buildcourse();
+  const courseTwo = await buildcourse();
+  const courseThree = await buildcourse();
 
   const userOne = global.signin();
   const userTwo = global.signin();
-
   // Create one order as User #1
-  const order = await request(app)
+  await request(app)
     .post("/api/orders")
     .set("Cookie", userOne)
     .send({ courseId: courseOne.id })
@@ -37,7 +36,6 @@ it("fetches orders for an particular user", async () => {
     .set("Cookie", userTwo)
     .send({ courseId: courseTwo.id })
     .expect(201);
-
   const { body: orderTwo } = await request(app)
     .post("/api/orders")
     .set("Cookie", userTwo)

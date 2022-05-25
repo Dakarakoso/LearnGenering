@@ -7,11 +7,11 @@ import {
   NotFoundError,
   currentUser,
 } from "@learngenering/common";
-import { indexOrderRouter } from "./routes/index";
+
 import { deleteOrderRouter } from "./routes/delete";
-import { updateOrderRouter } from "./routes/update";
-import { showOrderRouter } from "./routes/show";
+import { indexOrderRouter } from "./routes/index";
 import { newOrderRouter } from "./routes/new";
+import { showOrderRouter } from "./routes/show";
 
 const app = express();
 app.set("trust proxy", true);
@@ -24,11 +24,10 @@ app.use(
 );
 app.use(currentUser);
 
-app.use(indexOrderRouter);
 app.use(deleteOrderRouter);
-app.use(updateOrderRouter);
-app.use(showOrderRouter);
+app.use(indexOrderRouter);
 app.use(newOrderRouter);
+app.use(showOrderRouter);
 
 app.all("*", async (req, res) => {
   throw new NotFoundError();

@@ -1,7 +1,7 @@
 import {
+  Subjects,
   Publisher,
   OrderCancelledEvent,
-  Subjects,
 } from "@learngenering/common";
 
 export class OrderCancelledPublisher extends Publisher<OrderCancelledEvent> {
