@@ -8,6 +8,8 @@ declare global {
 }
 
 jest.mock("../nats-wrapper.ts");
+process.env.STRIPE_KEY =
+  "sk_test_51J10UBJRJClnUqK6gnMvNJyQmZsCY7xZgiUOQOU1Xsc81Iddq5kvIq3lW69DppIbGXfTuvxZ5BNZ0jnRT53kthiZ00qiEz9eDT";
 
 let mongod: MongoMemoryServer;
 beforeAll(async () => {
@@ -30,10 +32,10 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-global.signin = () => {
+global.signin = (id?: string) => {
   // Build a JWT payload. {id, email}
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: "test@test.com",
   };
   //  create the JWT
