@@ -3,3 +3,4 @@ node_modules
 */.next
 dev-notes.txt
 */dev-notes.txt
+.DS_Store
