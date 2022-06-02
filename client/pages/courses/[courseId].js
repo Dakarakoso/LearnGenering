@@ -14,7 +14,7 @@ const CourseShow = ({ course }) => {
   return (
     <div>
       <h1>{course.title}</h1>
-      <h4>Price: {course.price}</h4>
+      <h3>Price: {course.price}</h3>
       {errors}
       <button onClick={() => doRequest()} className="btn btn-primary">
         Purchase
