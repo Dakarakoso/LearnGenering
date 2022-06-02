@@ -1,25 +1,25 @@
-name: deploy-expirations
+name: deploy-expiration
 
 on:
   push:
     branches:
       - main
     paths:
-      - "expirations/**"
+      - "expiration/**"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd expirations && docker build -t dakarakoso/expirations .
+      - run: cd expiration && docker build -t dakarakoso/expiration .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker push dakarakoso/expirations
+      - run: docker push dakarakoso/expiration
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - run: doctl kubernetes cluster kubeconfig save learngenering-dev
-      - run: kubectl rollout restart deployment expirations-depl
+      - run: kubectl rollout restart deployment expiration-depl
