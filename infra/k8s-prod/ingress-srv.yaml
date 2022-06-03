@@ -3,9 +3,10 @@ kind: Ingress
 metadata:
   name: ingress-service
   annotations:
-    kubernetes.io/ingress.class: nginx
+    # kubernetes.io/ingress.class: nginx // deprecated?
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
+  ingressClassName: nginx
   rules:
     - host: www.learngenering-prod-dakarakoso.click
       http:
